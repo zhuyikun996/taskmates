@@ -6,6 +6,8 @@ export default function Home() {
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const [history, setHistory] = useState<string[]>([]);
   const [allowRepeat, setAllowRepeat] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setStudentNames(event.target.value);
@@ -34,7 +36,17 @@ export default function Home() {
     const student = availableStudents[randomIndex];
     setSelectedStudent(student);
     setHistory(prevHistory => [...prevHistory, student]);
+    setShowModal(true);
+    setModalContent("正在抽取中");
+    setTimeout(() => {
+      setModalContent(student);
+    }, 5000); // 5秒后更新 modalContent
   };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const handleReset = () => {
     setStudentNames("");
     setSelectedStudent(null);
@@ -104,6 +116,7 @@ export default function Home() {
           display: flex;
           padding: 0 20px; /* 左右边距为 20px */
           margin-top: 20px;
+          justify-content: space-between;
         }
 
         .google-button {
@@ -115,6 +128,7 @@ export default function Home() {
           cursor: pointer; /* 鼠标悬停时显示手型光标 */
           border-radius: 4px; /* 圆角半径为 4px */
           transition: background-color 0.3s, color 0.3s; /* 设置过渡效果 */
+          width: 33.33%;
         }
         
         .google-button:hover {
@@ -129,8 +143,46 @@ export default function Home() {
           flex-direction: column; /* 设置主轴方向为垂直方向，即上下布局 */
         }
 
+        .modal-background {
+          display: ${showModal ? "flex" : "none"}; /* 根据 showModal 状态决定是否显示弹窗背景 */
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5); /* 添加半透明黑色背景 */
+          z-index: 998; /* 弹窗背景的层级低于弹窗，以确保点击弹窗背景可以关闭弹窗 */
+        }
+
+        .modal {
+          display: ${showModal ? "flex" : "none"}; /* 根据 showModal 状态决定是否显示弹窗 */
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 33.33%; /* 设置弹窗宽度为屏幕的三分之一 */
+          height: 33.33%; /* 设置弹窗高度为屏幕的三分之一 */
+          background-color: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+          z-index: 999;
+          align-items: center; /* 垂直居中 */
+          justify-content: center; /* 水平居中 */
+        }
+
+        .modal-content {
+          font-size: 48px;
+          color: black;
+        }
 
       `}</style>
+
+      <div className="modal-background" onClick={handleCloseModal}></div>
+        <div className="modal">
+        <div className="modal-content">{modalContent}</div>
+      </div>
+
       <div className="banner">
         <div className="banner-left">TaskMates</div>
         <h1 className="banner-right">随机点名器</h1>
