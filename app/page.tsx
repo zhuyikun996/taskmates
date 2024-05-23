@@ -1,5 +1,6 @@
 'use client'
 import { ChangeEvent, useState } from "react";
+import Switch from "react-switch"; // 导入开关按钮组件
 
 export default function Home() {
   const [studentNames, setStudentNames] = useState("");
@@ -8,6 +9,7 @@ export default function Home() {
   const [allowRepeat, setAllowRepeat] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
+  const [showHistory, setShowHistory] = useState(false); // 新增状态用于控制抽取记录的显示与隐藏
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setStudentNames(event.target.value);
@@ -54,6 +56,9 @@ export default function Home() {
   };
   const handleRepeatChange = () => {
     setAllowRepeat(!allowRepeat);
+  };
+  const handleHistoryToggle = () => {
+    setShowHistory(!showHistory); // 切换抽取记录显示状态
   };
 
   const findDuplicates = (arr: string | any[]) => {
@@ -202,32 +207,39 @@ export default function Home() {
       <div className="button-container">  
         <button className="google-button" onClick={handleDraw}>抽取</button>
         <button className="google-button" onClick={handleReset}>重置</button>
-        <label>
-          <input
-            type="checkbox"
-            checked={allowRepeat}
-            onChange={handleRepeatChange}
-          />
-          允许重复抽取
-        </label>
+        {/* 添加一个开关按钮，用于控制抽取记录的显示与隐藏 */}
+        <button className="google-button" onClick={handleHistoryToggle}>
+          {showHistory ? "隐藏抽取记录" : "显示抽取记录"}
+        </button>
+        <button className="google-button" onClick={handleRepeatChange}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Switch
+              checked={allowRepeat}
+              onChange={handleRepeatChange}
+              offColor="#dddddd" // 关闭状态颜色为灰色
+              onColor="#07C160" // 开启状态颜色
+            />
+            <label style={{ marginLeft: 18 }}>允许重复抽取</label>
+          </div>
+        </button>
       </div>
 
-      <div className="result-container">
-        {selectedStudent && <p>本次被点名的是：{selectedStudent}</p>}
-          {history.length > 0 && (
-            <div>
-              <br />
-              <h2>点名历史记录：</h2>
-              <ul>
-                {history.map((student, index) => (
-                  <li key={index}>{student}</li>
-                ))}
-              </ul>
-              <br />
-            </div>
-          )}
-      </div>
-
+      {showHistory && (
+        <div className="result-container">
+            {history.length > 0 && (
+              <div>
+                <br />
+                <h2>抽取记录：</h2>
+                <ul>
+                  {history.map((student, index) => (
+                    <li key={index}>{index+1}-{student}</li>
+                  ))}
+                </ul>
+                <br />
+              </div>
+            )}
+        </div>
+      )}
     </div>
   );
 }
