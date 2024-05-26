@@ -50,11 +50,14 @@ export default function Home() {
     setModalContent("正在抽取中");
     setTimeout(() => {
       setModalContent(student);
-    }, 5000); // 5秒后更新 modalContent
+    }, 3000); // 5秒后更新 modalContent
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    // 当显示“正在抽取中”的时候，点击modal背景不关闭modal
+    if(modalContent !== "正在抽取中") {
+      setShowModal(false);
+    }
   };
 
   const handleReset = () => {
@@ -199,6 +202,7 @@ export default function Home() {
       <div className="banner">
         <div className="banner-left">TaskMates</div>
         <h1 className="banner-right">随机点名器</h1>
+        <h1 className="banner-right">番茄时钟</h1>
       </div>
 
       <div className="rollcall-container">
