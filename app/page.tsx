@@ -1,6 +1,7 @@
 'use client'
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Switch from "react-switch"; // 导入开关按钮组件
+import { initGA, logPageView } from '../utils/GoogleAnalytics';
 
 export default function Home() {
   const [studentNames, setStudentNames] = useState("");
@@ -10,6 +11,11 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [showHistory, setShowHistory] = useState(false); // 新增状态用于控制抽取记录的显示与隐藏
+  
+  useEffect(() => {
+    initGA();
+    logPageView();
+  }, []);
 
   const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setStudentNames(event.target.value);
