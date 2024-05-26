@@ -22,6 +22,8 @@ export default function Home() {
   };
 
   const handleDraw = () => {
+    // 先隐藏抽取历史
+    setShowHistory(false);
     const namesArray: string[] = studentNames.split(" ").filter(name => name.trim() !== "");
     const duplicateNames = findDuplicates(namesArray);
     if (studentNames.trim() === "") { // 检查输入是否为空
@@ -198,37 +200,41 @@ export default function Home() {
         <div className="banner-left">TaskMates</div>
         <h1 className="banner-right">随机点名器</h1>
       </div>
-      <div className="textarea-container">
-        <textarea
-          className="inputTextArea rounded-md border border-blue-500"
-          rows={4}
-          cols={50}
-          value={studentNames}
-          onChange={handleInputChange}
-          placeholder="输入姓名，用空格隔开"
-        ></textarea>
-      </div>
-      <br />
 
-      <div className="button-container">  
-        <button className="google-button" onClick={handleDraw}>抽取</button>
-        <button className="google-button" onClick={handleReset}>重置</button>
-        {/* 添加一个开关按钮，用于控制抽取记录的显示与隐藏 */}
-        <button className="google-button" onClick={handleHistoryToggle}>
-          {showHistory ? "隐藏抽取记录" : "显示抽取记录"}
-        </button>
-        <button className="google-button" onClick={handleRepeatChange}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Switch
-              checked={allowRepeat}
-              onChange={handleRepeatChange}
-              offColor="#dddddd" // 关闭状态颜色为灰色
-              onColor="#07C160" // 开启状态颜色
-            />
-            <label style={{ marginLeft: 18 }}>允许重复抽取</label>
-          </div>
-        </button>
+      <div className="rollcall-container">
+        <div className="textarea-container">
+          <textarea
+            className="inputTextArea rounded-md border border-blue-500"
+            rows={4}
+            cols={50}
+            value={studentNames}
+            onChange={handleInputChange}
+            placeholder="输入姓名，用空格隔开"
+          ></textarea>
+        </div>
+        <br />
+
+        <div className="button-container">  
+          <button className="google-button" onClick={handleDraw}>抽取</button>
+          <button className="google-button" onClick={handleReset}>重置</button>
+          {/* 添加一个开关按钮，用于控制抽取记录的显示与隐藏 */}
+          <button className="google-button" onClick={handleHistoryToggle}>
+            {showHistory ? "隐藏抽取记录" : "显示抽取记录"}
+          </button>
+          <button className="google-button" onClick={handleRepeatChange}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Switch
+                checked={allowRepeat}
+                onChange={handleRepeatChange}
+                offColor="#dddddd" // 关闭状态颜色为灰色
+                onColor="#07C160" // 开启状态颜色
+              />
+              <label style={{ marginLeft: 18 }}>允许重复抽取</label>
+            </div>
+          </button>
+        </div>
       </div>
+
 
       {showHistory && (
         <div className="result-container">
